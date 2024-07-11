@@ -5,7 +5,9 @@ import {
   FooterContainer,
   MenuContainer,
 } from "./styles";
-import { Header } from "../Header";
+import { Header } from "../components/Header";
+import { Categories } from "../components/Categories";
+import { Menu } from "../components/Menu";
 
 export function Main() {
   return (
@@ -14,14 +16,18 @@ export function Main() {
 
         <Header />
 
-        <CategoriesContainer />
+        <CategoriesContainer>
+          <Categories />
+        </CategoriesContainer>
 
-        <MenuContainer></MenuContainer>
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
 
       </Container>
 
       <Footer>
-      <FooterContainer></FooterContainer>
+        <FooterContainer></FooterContainer>
       </Footer>
     </>
   );
