@@ -19,9 +19,14 @@ import { Button } from "../Button";
 
 interface CartProps {
   cartItems: CartItem[];
+  onAddProductToCart: (product: Product) => void;
 }
 
-export function Cart({ cartItems }: CartProps) {
+export function Cart({ cartItems, onAddProductToCart }: CartProps) {
+  const total = cartItems.reduce((acc, cartItem) => {
+    return acc + cartItem.quantity * cartItem.product.price;
+  }, 0);
+
   return (
     <>
       {cartItems.length > 0 && (
@@ -54,7 +59,10 @@ export function Cart({ cartItems }: CartProps) {
               </ProductContainer>
 
               <Actions>
-                <TouchableOpacity style={{ marginRight: 24 }}>
+                <TouchableOpacity
+                  style={{ marginRight: 24 }}
+                  onPress={() => onAddProductToCart(cartItem.product)}
+                >
                   <PlusCircle />
                 </TouchableOpacity>
 
@@ -73,7 +81,7 @@ export function Cart({ cartItems }: CartProps) {
             <>
               <Text color="#666">Total</Text>
               <Text size={20} weight="600">
-                {formatCurrency(120)}
+                {formatCurrency(total)}
               </Text>
             </>
           ) : (
@@ -84,7 +92,9 @@ export function Cart({ cartItems }: CartProps) {
         <Button
           onPress={() => "confirmar pedido"}
           disabled={cartItems.length === 0}
-         >Confirmar pedido</Button>
+        >
+          Confirmar pedido
+        </Button>
       </Sumary>
     </>
   );
