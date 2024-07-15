@@ -20,9 +20,10 @@ import { Button } from "../Button";
 interface CartProps {
   cartItems: CartItem[];
   onAddProductToCart: (product: Product) => void;
+  onDecrementProductToCart: (product: Product) => void;
 }
 
-export function Cart({ cartItems, onAddProductToCart }: CartProps) {
+export function Cart({ cartItems, onAddProductToCart, onDecrementProductToCart }: CartProps) {
   const total = cartItems.reduce((acc, cartItem) => {
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
@@ -66,7 +67,7 @@ export function Cart({ cartItems, onAddProductToCart }: CartProps) {
                   <PlusCircle />
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=> onDecrementProductToCart(cartItem.product)}>
                   <MinusCircle />
                 </TouchableOpacity>
               </Actions>
