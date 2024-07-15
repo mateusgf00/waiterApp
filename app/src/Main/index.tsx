@@ -19,21 +19,13 @@ import { Product } from "../types/Product";
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState("");
-  const [cartItem, setCartItem] = useState<CartItem[]>([
-    // {
-    //   quantity: 1,
-    //   product: products[0]
-    // },{
-    //   quantity: 3,
-    //   product: products[1]
-    // }
-  ]);
+  const [cartItem, setCartItem] = useState<CartItem[]>([]);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
   }
 
-  function handleCancelOrder() {
+  function handleResetOrder() {
     setSelectedTable("");
     setCartItem([]);
   }
@@ -96,7 +88,7 @@ export function Main() {
       <Container>
         <Header
           selectedTable={selectedTable}
-          onCancelOrder={handleCancelOrder}
+          onCancelOrder={handleResetOrder}
         />
 
         <CategoriesContainer>
@@ -120,6 +112,7 @@ export function Main() {
             cartItems={cartItem}
             onAddProductToCart={handleAddToCart}
             onDecrementProductToCart={handleDecrementCartItem}
+            onConfirmOrder={handleResetOrder}
           />
           )}
         </FooterContainer>
