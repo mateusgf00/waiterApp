@@ -15,10 +15,11 @@ import { useState } from "react";
 import { Product } from "../../types/Product";
 
 interface MenuProps {
-  onAddProductToCart: (product: Product) => void
+  onAddProductToCart: (product: Product) => void,
+  products: Product[]
 }
 
-export function Menu({ onAddProductToCart }: MenuProps) {
+export function Menu({ onAddProductToCart, products }: MenuProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<null | Product>(null);
 

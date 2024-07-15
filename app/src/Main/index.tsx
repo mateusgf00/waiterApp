@@ -1,5 +1,6 @@
 import {
   CategoriesContainer,
+  CenteredContainer,
   Container,
   Footer,
   FooterContainer,
@@ -13,13 +14,19 @@ import { TableModal } from "../components/TableModal";
 import { useState } from "react";
 import { Cart } from "../components/Cart";
 import { CartItem } from "../types/CartItem";
-import { products } from "../mocks/products";
 import { Product } from "../types/Product";
+import { ActivityIndicator } from "react-native";
+
+import { products as mockProducts } from "../mocks/products";
+import { Empty } from "../components/Icons/Empty";
+import { Text } from "../components/Text";
 
 export function Main() {
   const [isTableModalVisible, setIsTableModalVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState("");
   const [cartItem, setCartItem] = useState<CartItem[]>([]);
+  const [isLoading] = useState(false);
+  const [products] = useState<Product[]>(mockProducts);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -46,13 +53,13 @@ export function Main() {
         });
       }
 
-      const newCartItems = [...prevState]
+      const newCartItems = [...prevState];
       const item = prevState[itemIndex];
 
       newCartItems[itemIndex] = {
         ...item,
-        quantity: item.quantity + 1
-      }
+        quantity: item.quantity + 1,
+      };
 
       return newCartItems;
     });
@@ -67,7 +74,7 @@ export function Main() {
       const item = prevState[itemIndex];
       const newCartItems = [...prevState];
 
-      if(item.quantity === 1) {
+      if (item.quantity === 1) {
         newCartItems.splice(itemIndex, 1);
 
         return newCartItems;
@@ -75,12 +82,11 @@ export function Main() {
 
       newCartItems[itemIndex] = {
         ...item,
-        quantity: item.quantity - 1
-      }
+        quantity: item.quantity - 1,
+      };
 
-      return newCartItems
-
-    })
+      return newCartItems;
+    });
   }
 
   return (
@@ -91,29 +97,52 @@ export function Main() {
           onCancelOrder={handleResetOrder}
         />
 
-        <CategoriesContainer>
-          <Categories />
-        </CategoriesContainer>
+        {isLoading && (
+          <CenteredContainer>
+            <ActivityIndicator color="#D73035" size="large"/>
+          </CenteredContainer>
+        )}
 
-        <MenuContainer>
-          <Menu onAddProductToCart={handleAddToCart} />
-        </MenuContainer>
+        {!isLoading && (
+          <>
+            <CategoriesContainer>
+              <Categories />
+            </CategoriesContainer>
+
+            {products.length > 0 ? (
+              <MenuContainer>
+              <Menu
+                onAddProductToCart={handleAddToCart}
+                products={products}
+              />
+            </MenuContainer>
+            ): (
+              <CenteredContainer>
+                <Empty />
+                <Text color="#666">Nenhum produto foi encontrado!</Text>
+              </CenteredContainer>
+            )}
+          </>
+        )}
       </Container>
 
       <Footer>
         <FooterContainer>
           {!selectedTable && (
-            <Button onPress={() => setIsTableModalVisible(true)}>
+            <Button
+              onPress={() => setIsTableModalVisible(true)}
+              disabled={isLoading}
+            >
               Novo Pedido
             </Button>
           )}
           {selectedTable && (
-          <Cart
-            cartItems={cartItem}
-            onAddProductToCart={handleAddToCart}
-            onDecrementProductToCart={handleDecrementCartItem}
-            onConfirmOrder={handleResetOrder}
-          />
+            <Cart
+              cartItems={cartItem}
+              onAddProductToCart={handleAddToCart}
+              onDecrementProductToCart={handleDecrementCartItem}
+              onConfirmOrder={handleResetOrder}
+            />
           )}
         </FooterContainer>
       </Footer>
