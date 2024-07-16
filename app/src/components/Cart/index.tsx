@@ -18,15 +18,24 @@ import { MinusCircle } from "../Icons/MinusCircle";
 import { Button } from "../Button";
 import { OrderConfirmedModal } from "../OrderConfirmedModal";
 import { useState } from "react";
+import { api } from "../../utils/api";
+import { products } from "../../mocks/products";
 
 interface CartProps {
   cartItems: CartItem[];
   onAddProductToCart: (product: Product) => void;
   onDecrementProductToCart: (product: Product) => void;
   onConfirmOrder: () => void;
+  selectTable: string;
 }
 
-export function Cart({ cartItems, onAddProductToCart, onDecrementProductToCart, onConfirmOrder }: CartProps) {
+export function Cart({
+  cartItems,
+  onAddProductToCart,
+  onDecrementProductToCart,
+  onConfirmOrder,
+  selectTable,
+}: CartProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,14 +43,24 @@ export function Cart({ cartItems, onAddProductToCart, onDecrementProductToCart, 
     return acc + cartItem.quantity * cartItem.product.price;
   }, 0);
 
+  async function handleConfirmedOrder() {
+    setIsLoading(true);
 
-  function handleConfirmedModal() {
+    api.post("/orders", {
+      table: selectTable,
+      products: cartItems.map((cartItem) => ({
+        product: cartItem.product._id,
+        quantity: cartItem.quantity,
+      })),
+    });
+
+    setIsLoading(false);
     setIsModalVisible(true);
   }
 
   function handleOk() {
-    setIsModalVisible(false)
-    onConfirmOrder()
+    setIsModalVisible(false);
+    onConfirmOrder();
   }
 
   return (
@@ -85,7 +104,9 @@ export function Cart({ cartItems, onAddProductToCart, onDecrementProductToCart, 
                   <PlusCircle />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={()=> onDecrementProductToCart(cartItem.product)}>
+                <TouchableOpacity
+                  onPress={() => onDecrementProductToCart(cartItem.product)}
+                >
                   <MinusCircle />
                 </TouchableOpacity>
               </Actions>
@@ -109,12 +130,12 @@ export function Cart({ cartItems, onAddProductToCart, onDecrementProductToCart, 
         </TotalContainer>
 
         <Button
-          onPress={handleConfirmedModal}
+          onPress={handleConfirmedOrder}
           disabled={cartItems.length === 0}
           loading={isLoading}
         >
           Confirmar pedido
-        </Button>ß
+        </Button>
       </Sumary>
     </>
   );
