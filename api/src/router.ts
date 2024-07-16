@@ -11,6 +11,7 @@ import { createOrder } from "./app/useCases/orders/createOrder";
 import { changeOrderStatus } from "./app/useCases/orders/changeOrderStatus";
 import { cancelOrder } from "./app/useCases/orders/cancelOrder";
 import { deleteProduct } from "./app/useCases/products/deleteProduct";
+import { updateProduct } from "./app/useCases/products/updateProduct";
 
 export const router = Router();
 
@@ -32,6 +33,8 @@ router.post("/categories", createCategory);
 router.get("/products", listProducts);
 
 router.post("/products", upload.single("image"), createProduct);
+
+router.patch("/products/:productId", upload.single("image"), updateProduct);
 
 router.delete("/products/:productId", deleteProduct)
 
