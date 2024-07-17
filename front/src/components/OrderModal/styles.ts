@@ -117,6 +117,11 @@ export const Actions = styled.footer`
   flex-direction: column;
   margin-top: 32px;
 
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .primary {
     background: #333333;
     border-radius: 48px;
@@ -131,7 +136,7 @@ export const Actions = styled.footer`
 
   .secundary {
     padding: 14px 24px;
-    color: #D73035;
+    color: #d73035;
     font-weight: bold;
     border: 0;
     background: transparent;
